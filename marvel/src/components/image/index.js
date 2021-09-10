@@ -3,8 +3,7 @@
 
 
 export default function Image(props){
-    console.log(props.image)
-    let path = props.image+'/portrait_xlarge.jpg'
+    let path = props.image.path+'/portrait_fantastic.'+props.image.extension
     return(
         <div>
             <img src={path} alt='hero thumbnail'/>

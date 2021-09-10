@@ -30,7 +30,7 @@ function Characters(){
             {characters.map((item, i)=>
                 <div>
                 <h1 key={i}>{item.name}</h1>
-                <Image key={i} image={item.thumbnail.path}/>
+                <Image key={i} image={item.thumbnail}/>
                 </div>
             )}
         </div>
