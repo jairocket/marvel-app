@@ -22,15 +22,14 @@ function Characters(){
 
     if(!characters) return null
 
-    console.log(characters)
 
     return(
 
         <div>
             {characters.map((item, i)=>
                 <div>
-                <h1 key={i}>{item.name}</h1>
-                <Image key={i} image={item.thumbnail}/>
+                    <h1 key={i}>{item.name}</h1>
+                    <Image key={i} image={item.thumbnail}/>
                 </div>
             )}
         </div>
