@@ -1,3 +1,5 @@
+import '../../pages/characters/styles.css'
+import '../../styles/global.css'
 
 import { useEffect, useState } from 'react'
 
@@ -25,11 +27,11 @@ function Characters(){
 
     return(
 
-        <div>
-            {characters.map((item, i)=>
-                <div>
-                    <h1 key={i}>{item.name}</h1>
-                    <Image key={i} image={item.thumbnail}/>
+        <div className='characters'>
+            {characters.map((item)=>
+                <div className='characters-character'>
+                    <h1>{item.name}</h1>
+                    <Image image={item.thumbnail}/>
                 </div>
             )}
         </div>
