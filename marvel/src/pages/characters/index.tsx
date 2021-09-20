@@ -8,21 +8,25 @@ import hash from '../../services/hash'
 
 import Image from '../../components/image'
 
+interface CharacterResponseProps{
+    name: string;
+    thumbnail: {
+        path: string;
+        extension: string;
+    };
+}
+
 function Characters(){
 
-    const [characters, setCharacters] = useState([])
-
-    function getCharacters(){
-        fetch(api+'/characters'+hash)
-        .then(res => res.json())
-        .then(res => setCharacters(res.data.results))   
-    }
+    const [characters, setCharacters] = useState<CharacterResponseProps[]>([])
 
     useEffect(()=>{
-        setCharacters(getCharacters)
-    },[]) 
+        fetch(api+'/characters'+hash)
+        .then(res => res.json())
+        .then(res=> setCharacters(res.data.results))
+    },[])
 
-    if(!characters) return null
+    // if(!characters) return null
 
 
     return(
