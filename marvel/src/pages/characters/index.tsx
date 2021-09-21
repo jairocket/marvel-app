@@ -23,7 +23,20 @@ function Characters(){
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [hasmore, setHasMore] = useState(false);
-    const observer = useRef()
+    const observer = useRef<IntersectionObserver>()
+
+    const lastCharacterRef =useCallback(node =>{
+        if(loading) return
+        if(observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(entries =>{
+            if(entries[0].isIntersecting && hasmore){
+                setOffset(offset => offset + 20)
+            }
+
+        })
+        if(node) observer.current.observe(node)
+        // console.log(node)
+    },[loading, hasmore])
 
     useEffect(()=>{
         setLoading(true);
@@ -31,9 +44,12 @@ function Characters(){
         fetch(`${api}/characters?limit=20&${hash}&offset=${offset}`)
         .then(res => res.json())
         .then(res=> {
-            setCharacters([...characters, ...res.data.results]);
+            setCharacters(characters =>{
+                return [...characters, ...res.data.results]
+            });
             setHasMore(res.data.results.length > 0);
             setLoading(false);
+            console.log(res.data.results)
         })
     },[offset]);
 
@@ -41,11 +57,25 @@ function Characters(){
     return(
 
         <div className='characters'>
-            {characters.map((item)=>
-                <div className='characters-character' key={item.name}>
-                    <h1>{item.name}</h1>
-                    <Image image={item.thumbnail}/>
-                </div>
+            {characters.map((item, index)=>
+                {
+                    if(characters.length === index+1){
+                       return (
+                            <div ref={lastCharacterRef} className='characters-character' key={index}>
+                                <h1>{item.name}</h1>
+                                <Image image={item.thumbnail}/>
+                            </div>
+                            )
+                    }else{
+                        return(
+                            <div className='characters-character' key={item.name}>
+                                <h1>{item.name}</h1>
+                                <Image image={item.thumbnail}/>
+                            </div>
+                        )
+                    }
+                }
+                
             )}
             <div>{loading && 'Loading...'}</div>
             <div>{error && 'Error'}</div>
