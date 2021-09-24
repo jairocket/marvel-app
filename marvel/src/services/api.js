@@ -1,3 +1,9 @@
-const baseURL = 'http://gateway.marvel.com/v1/public'
 
-module.exports = baseURL
+
+
+
+import axios from "axios";
+
+export const api = axios.create({
+    baseURL: 'http://gateway.marvel.com/v1/public'
+})

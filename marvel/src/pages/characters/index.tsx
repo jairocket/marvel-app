@@ -3,7 +3,7 @@ import '../../styles/global.css'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
 
-import api from "../../services/api"
+import { api } from "../../services/api"
 import hash from '../../services/hash'
 
 import Image from '../../components/image'
@@ -32,24 +32,20 @@ function Characters(){
             if(entries[0].isIntersecting && hasmore){
                 setOffset(offset => offset + 20)
             }
-
         })
         if(node) observer.current.observe(node)
-        // console.log(node)
     },[loading, hasmore])
 
     useEffect(()=>{
         setLoading(true);
         setError(false);
-        fetch(`${api}/characters?limit=20&${hash}&offset=${offset}`)
-        .then(res => res.json())
+        api.get(`/characters?limit=20&${hash}&offset=${offset}`)
         .then(res=> {
             setCharacters(characters =>{
-                return [...characters, ...res.data.results]
+                return [...characters, ...res.data.data.results]
             });
-            setHasMore(res.data.results.length > 0);
+            setHasMore(res.data.data.results.length > 0);
             setLoading(false);
-            console.log(res.data.results)
         })
     },[offset]);
 
@@ -65,7 +61,7 @@ function Characters(){
                                 <h1>{item.name}</h1>
                                 <Image image={item.thumbnail}/>
                             </div>
-                            )
+                        )
                     }else{
                         return(
                             <div className='characters-character' key={item.name}>
