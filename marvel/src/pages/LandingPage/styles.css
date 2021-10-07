@@ -1,0 +1,10 @@
+.landing{
+    height: 300px;
+    width: 360px;
+    overflow: hidden;
+}
+
+img {
+    
+    width: 100%;
+}

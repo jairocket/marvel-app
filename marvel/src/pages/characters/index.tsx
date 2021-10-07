@@ -1,14 +1,19 @@
 import '../../pages/characters/styles.css'
 import '../../styles/global.css'
 
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback, useContext } from 'react'
+import { useHistory } from 'react-router'
+import { CharactersContext } from '../../hooks/CharactersContext'
 
 import { api } from "../../services/api"
 import hash from '../../services/hash'
 
 import Image from '../../components/image'
+import {Header} from '../../components/Header'
+
 
 interface CharacterResponseProps{
+    id: number;
     name: string;
     thumbnail: {
         path: string;
@@ -17,6 +22,8 @@ interface CharacterResponseProps{
 }
 
 function Characters(){
+    const history = useHistory()
+    const {getCharacter} = useContext(CharactersContext) 
 
     const [characters, setCharacters] = useState<CharacterResponseProps[]>([]);
     const [offset, setOffset] = useState(0);
@@ -51,22 +58,29 @@ function Characters(){
 
 
     return(
-
+        <>
+        <Header />
         <div className='characters'>
-            {characters.map((item, index)=>
-                {
-                    if(characters.length === index+1){
-                       return (
-                            <div ref={lastCharacterRef} className='characters-character' key={index}>
-                                <h1>{item.name}</h1>
-                                <Image image={item.thumbnail}/>
-                            </div>
+            {characters.map((item, index)=>{
+                if(characters.length === index+1){
+                    return (
+                        <div ref={lastCharacterRef} className='characters-character' key={item.id}>
+                            <h1>{item.name}</h1>
+                            <button onClick={()=> history.push(`/character/${item.id}`)}>
+                                <Image  image={item.thumbnail}/>
+                            </button>   
+                        </div>
                         )
                     }else{
                         return(
                             <div className='characters-character' key={item.name}>
                                 <h1>{item.name}</h1>
-                                <Image image={item.thumbnail}/>
+                                <button onClick={()=> {
+                                    getCharacter(item.id); 
+                                    history.push(`/characters/${item.id}`)
+                                }}>
+                                    <Image image={item.thumbnail}/>
+                                </button> 
                             </div>
                         )
                     }
@@ -76,7 +90,7 @@ function Characters(){
             <div>{loading && 'Loading...'}</div>
             <div>{error && 'Error'}</div>
         </div>
-        
+        </>
     )
 }
 
