@@ -5,17 +5,41 @@ import '../../pages/characters/styles.css'
 import '../../styles/global.css'
 
 import Image from '../../components/image'
+import hash from '../../services/hash'
 
-// import Image from '../../components/image'
 
 export function CharactersDetails(){
-    const data = useContext(CharactersContext) 
-    console.log(data.character)
+    const { character } = useContext(CharactersContext);
+      
     return (
         <>
-            <Image image={data.character.thumbnail}/>
-            <span>{data.character.name}</span>
-            <p>{data.character.description}</p>
+            <Image image={character.thumbnail}/>
+            <span>{character.name}</span>
+            <p>{character.description}</p>
+            <h3>COMICS</h3>
+            {character.comics.items.map((item) =>{
+                return(
+                    <>
+                    <p key={item.name}>{item.name}</p>
+                    </>
+                )
+            })}
+            <h3>SERIES</h3>
+            {character.series.items.map((item) =>{
+                return(
+                    <>
+                    <p key={item.name}>{item.name}</p>
+                    </>
+                )
+            })}
+            <h3>STORIES</h3>
+            {character.stories.items.map((item) =>{
+                return(
+                    <>
+                    <p key={item.name} >{item.name}</p>
+                    </>
+                )
+            })}
         </>
     )
 }

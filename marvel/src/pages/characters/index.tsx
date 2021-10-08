@@ -23,7 +23,7 @@ interface CharacterResponseProps{
 
 function Characters(){
     const history = useHistory()
-    const {getCharacter} = useContext(CharactersContext) 
+    const {getCharacterId} = useContext(CharactersContext) 
 
     const [characters, setCharacters] = useState<CharacterResponseProps[]>([]);
     const [offset, setOffset] = useState(0);
@@ -75,8 +75,8 @@ function Characters(){
                         return(
                             <div className='characters-character' key={item.name}>
                                 <h1>{item.name}</h1>
-                                <button onClick={()=> {
-                                    getCharacter(item.id); 
+                                <button onClick={async ()=> {
+                                    await getCharacterId(item.id); 
                                     history.push(`/characters/${item.id}`)
                                 }}>
                                     <Image image={item.thumbnail}/>

@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { api } from "../services/api";
 import  hash  from "../services/hash"
 
@@ -29,17 +29,17 @@ interface character {
         resourceURI: string;
         comics:{
             available: number;
-            colectionURI: string;
+            collectionURI: string;
             items: item[];
         };
         series: {
             available: number;
-            colectionURI: string;
+            collectionURI: string;
             items: item[];
         };
         stories:{
             available: number;
-            colectionURI: string;
+            collectionURI: string;
             items: item[];
         };
         events:{
@@ -55,23 +55,31 @@ interface character {
 
 interface CharactersContextData{
     character: character;
-    getCharacter:(characterId: number)=> Promise<void>
+    getCharacterId:(characterId: number)=> Promise<void>
 }
 
 export const CharactersContext = createContext<CharactersContextData>({} as CharactersContextData);
 
 export function CharactersProvider({children}: CharactersProviderProps){
     const [character, setCharacter] = useState<character>({} as character);
+    const [characterId, setCharacterId] =useState(1011334);
 
+    useEffect(()=>{
+        api.get(`characters/${characterId}?${hash}`).then(
+            data=> setCharacter(data.data.data.results[0])
 
-    const getCharacter = async(characterId: number)=>{
-        const {data} = await api.get(`characters/${characterId}?${hash}`)
-        setCharacter(data.data.results[0])
+        )
+        // setCharacter(data.data.results[0])
+    },[characterId])
+
+    const getCharacterId = async(characterId: number)=>{
+        setCharacterId(characterId)
+        
     }
-
+    console.log(character)
     return(
         <CharactersContext.Provider value={
-            {character, getCharacter}
+            {character, getCharacterId}
         }>
             {children}
         </CharactersContext.Provider>
