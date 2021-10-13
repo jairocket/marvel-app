@@ -1,6 +1,5 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
-import { api } from "../services/api";
-import  hash  from "../services/hash"
+import { createContext, ReactNode, SetStateAction, useEffect, useState } from "react";
+
 
 interface CharactersProviderProps{
     children: ReactNode;
@@ -18,68 +17,72 @@ interface url{
 }
 
 interface character {
-    
-        id: number;
-        name: string;
-        description: string;
-        thumbnail: {
-            path: string;
-            extension: string;
-        };
-        resourceURI: string;
-        comics:{
-            available: number;
-            collectionURI: string;
-            items: item[];
-        };
-        series: {
-            available: number;
-            collectionURI: string;
-            items: item[];
-        };
-        stories:{
-            available: number;
-            collectionURI: string;
-            items: item[];
-        };
-        events:{
-            available: number;
-            colectionURI: string;
-            items: item[];
-        };
-        urls: url[];
-
-    
+    id: number;
+    name: string;
+    description: string;
+    thumbnail: {
+        path: string;
+        extension: string;
+    };
+    resourceURI: string;
+    comics:{
+        available: number;
+        collectionURI: string;
+        items: item[];
+    };
+    series: {
+        available: number;
+        collectionURI: string;
+        items: item[];
+    };
+    stories:{
+        available: number;
+        collectionURI: string;
+        items: item[];
+    };
+    events:{
+        available: number;
+        colectionURI: string;
+        items: item[];
+    };
+    urls: url[];  
 
 }
 
 interface CharactersContextData{
     character: character;
+    setCharacter: React.Dispatch<SetStateAction<character>>
     getCharacterId:(characterId: number)=> Promise<void>
+    setCharacterId: React.Dispatch<SetStateAction<number>>
 }
 
 export const CharactersContext = createContext<CharactersContextData>({} as CharactersContextData);
 
 export function CharactersProvider({children}: CharactersProviderProps){
     const [character, setCharacter] = useState<character>({} as character);
-    const [characterId, setCharacterId] =useState(1011334);
-
+    const [characterId, setCharacterId] = useState(()=>{
+        const storagedCharacterId = localStorage.getItem('wiki-marvel');
+        if(storagedCharacterId) {
+            return JSON.parse(storagedCharacterId)
+        }else{
+            return 1011334
+        } 
+    });  
+    
     useEffect(()=>{
-        api.get(`characters/${characterId}?${hash}`).then(
-            data=> setCharacter(data.data.data.results[0])
-
-        )
-        // setCharacter(data.data.results[0])
+        localStorage.setItem('wiki-marvel', JSON.stringify(characterId))
     },[characterId])
 
+    
+
     const getCharacterId = async(characterId: number)=>{
-        setCharacterId(characterId)
-        
+        setCharacterId(characterId)   
     }
-    console.log(character)
+    
+    
     return(
         <CharactersContext.Provider value={
-            {character, getCharacterId}
+            {character, setCharacter, getCharacterId,  setCharacterId}
         }>
             {children}
         </CharactersContext.Provider>

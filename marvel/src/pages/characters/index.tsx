@@ -75,8 +75,8 @@ function Characters(){
                         return(
                             <div className='characters-character' key={item.name}>
                                 <h1>{item.name}</h1>
-                                <button onClick={async ()=> {
-                                    await getCharacterId(item.id); 
+                                <button onClick={()=> {
+                                    getCharacterId(item.id); 
                                     history.push(`/characters/${item.id}`)
                                 }}>
                                     <Image image={item.thumbnail}/>
